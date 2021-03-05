@@ -22,6 +22,18 @@ def write_bzImage(path: Path,
     """Write a pseudo-bzImage file at `path`, with `version_line`"""
     with open(path, 'wb') as f:
         f.write(0x202 * b'\0')
+        f.seek(0)
+        f.write(b'MZ')
+        f.seek(0x3c)
+        f.write(b'\x3d')
+        f.write(2 * b'\0')
+        f.write(b'\x01\x00')
+        f.write(12 * b'\0')
+        f.write(b'\x08')
+        f.write(10 * b'\0')
+        # section name may be up to 8 bytes!
+        f.write(b'.section')
+        f.seek(0x202)
         f.write(b'HdrS')
         f.write(8 * b'\0')
         f.write(b'\x10\x00')
